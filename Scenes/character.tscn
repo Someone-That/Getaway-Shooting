@@ -6,8 +6,10 @@
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_6ibit"]
 size = Vector2(50, 166)
 
-[node name="character" type="CharacterBody2D"]
+[node name="RigidBody2D" type="RigidBody2D"]
+rotation = 0.162426
 script = ExtResource("1_3ra8w")
+metadata/_edit_group_ = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("RectangleShape2D_6ibit")
