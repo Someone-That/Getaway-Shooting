@@ -7,7 +7,9 @@
 size = Vector2(50, 166)
 
 [node name="RigidBody2D" type="RigidBody2D"]
-rotation = 0.162426
+center_of_mass_mode = 1
+center_of_mass = Vector2(0, 85)
+linear_velocity = Vector2(300, 0)
 script = ExtResource("1_3ra8w")
 metadata/_edit_group_ = true
 

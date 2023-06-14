@@ -1,5 +1,6 @@
 extends RigidBody2D
 
+var sensitivity = 180
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -8,4 +9,13 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-	pass
+	if Input.is_action_pressed("p1left"):
+		angular_velocity = -sensitivity * delta
+	if Input.is_action_pressed("p1right"):
+		angular_velocity = sensitivity * delta
+	
+	if Input.is_action_just_pressed("p1use"):
+		get_tree().reload_current_scene()
+	
+	if Input.is_action_just_released("p1right") or Input.is_action_just_released("p1left"):
+		linear_velocity += -transform.y.normalized() * 500
