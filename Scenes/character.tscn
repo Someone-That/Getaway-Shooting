@@ -8,18 +8,19 @@ size = Vector2(50, 166)
 
 [node name="RigidBody2D" type="CharacterBody2D"]
 script = ExtResource("1_3ra8w")
+collisionpath = NodePath("CollisionShape2D")
+spritepath = NodePath("CollisionShape2D/Sprite2D")
+camerapath = NodePath("Camera2D")
 metadata/_edit_group_ = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, -82.73)
 shape = SubResource("RectangleShape2D_6ibit")
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
-position = Vector2(0, -82.73)
+[node name="Sprite2D" type="Sprite2D" parent="CollisionShape2D"]
 scale = Vector2(0.40625, 1.30469)
 texture = ExtResource("1_mi3ex")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 offset = Vector2(0, -82.73)
-position_smoothing_enabled = true
 position_smoothing_speed = 10.0
