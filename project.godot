@@ -12,8 +12,12 @@ config_version=5
 
 config/name="Getaway Shootout +"
 run/main_scene="res://Scenes/main.tscn"
-config/features=PackedStringArray("4.0", "Forward Plus")
+config/features=PackedStringArray("4.1", "Forward Plus")
 config/icon="res://icon.svg"
+
+[display]
+
+window/stretch/mode="canvas_items"
 
 [input]
 
