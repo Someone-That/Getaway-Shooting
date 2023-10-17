@@ -14,7 +14,11 @@ var max_rotation = 55
 @onready var camera = get_node(camerapath)
 
 @onready var width = collision.shape.size.x
-var torque = 1000
+var ground_torque = 3000
+var air_torque = 300
+var on_floor = false
+var jump_force = 800
+var torqueless_zone = 5 #degrees (same as getaway shootout)
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -23,7 +27,6 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _physics_process(delta):
-	
 	if Input.is_action_pressed("p1left") and not Input.is_action_pressed("p1right"):
 		angular_velocity = -sensitivity * delta
 	
@@ -41,14 +44,20 @@ func _physics_process(delta):
 		get_tree().reload_current_scene()
 	
 	if Input.is_action_just_released("p1right") or Input.is_action_just_released("p1left"):
-		linear_velocity += -transform.y.normalized() * 500
+		linear_velocity += -transform.y.normalized() * jump_force
+		angular_velocity = 0
 		pass
 	
 	#apply the bobble effect
 	if rotation_degrees == 0:
 		constant_torque = 0
 	else:
-		constant_torque = -pow(abs(rotation_degrees),1) * (abs(rotation_degrees)/rotation_degrees) * torque
+		if on_floor: constant_torque = -pow(abs(rotation_degrees),1) * (abs(rotation_degrees)/rotation_degrees) * ground_torque
+		else: 
+			constant_torque = -pow(abs(rotation_degrees),1.2) * (abs(rotation_degrees)/rotation_degrees) * air_torque
+			if rotation_degrees == clamp(rotation_degrees,-torqueless_zone,torqueless_zone): #rotation degrees is within torqueless zone degrees
+				constant_torque = 0
+				angular_velocity = 0
 
 
 func change_pivot_point(left_or_right):
@@ -63,8 +72,8 @@ func change_pivot_point(left_or_right):
 
 
 func _on_body_entered(body):
-	print("in floor")
+	on_floor = true
 
 
 func _on_body_exited(body):
-	print("air")
+	on_floor = false

@@ -1,10 +1,10 @@
 [gd_scene load_steps=4 format=3 uid="uid://kar43gtfxsa6"]
 
 [ext_resource type="Script" path="res://Scripts/character.gd" id="1_3ra8w"]
-[ext_resource type="Texture2D" uid="uid://bw8kdjg0rj4sq" path="res://icon.svg" id="1_mi3ex"]
+[ext_resource type="Texture2D" uid="uid://ds56ouywobj8j" path="res://mc.PNG" id="2_764wf"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_6ibit"]
-size = Vector2(50, 166)
+size = Vector2(47.295, 166.39)
 
 [node name="RigidBody2D" type="RigidBody2D"]
 inertia = 10000.0
@@ -17,15 +17,16 @@ camerapath = NodePath("Camera2D")
 metadata/_edit_group_ = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0, -82.73)
+position = Vector2(0, -83.195)
 shape = SubResource("RectangleShape2D_6ibit")
 
 [node name="Sprite2D" type="Sprite2D" parent="CollisionShape2D"]
-scale = Vector2(0.40625, 1.30469)
-texture = ExtResource("1_mi3ex")
+scale = Vector2(0.34, 0.34)
+texture = ExtResource("2_764wf")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 offset = Vector2(0, -82.73)
+zoom = Vector2(0.7, 0.7)
 position_smoothing_speed = 10.0
 
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]
