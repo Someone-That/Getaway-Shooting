@@ -1,4 +1,4 @@
-extends CharacterBody2D
+extends RigidBody2D
 
 var sensitivity = 180
 var gravity = 1000
@@ -14,6 +14,7 @@ var max_rotation = 55
 @onready var camera = get_node(camerapath)
 
 @onready var width = collision.shape.size.x
+var torque = 1000
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -21,32 +22,33 @@ func _ready():
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
-	
-	#gravity
-	velocity.y += gravity * delta
+func _physics_process(delta):
 	
 	if Input.is_action_pressed("p1left") and not Input.is_action_pressed("p1right"):
-		rotation_degrees += -sensitivity * delta
+		angular_velocity = -sensitivity * delta
 	
 	if Input.is_action_pressed("p1right") and not Input.is_action_pressed("p1left"):
-		rotation_degrees += sensitivity * delta
+		angular_velocity = sensitivity * delta
 		
-	rotation_degrees = clamp(rotation_degrees, -max_rotation, max_rotation)
+	#rotation_degrees = clamp(rotation_degrees, -max_rotation, max_rotation)
 	
-	if rotation_degrees < 0:
-		change_pivot_point("left")
-	else:
-		change_pivot_point("right")
+#	if rotation_degrees < 0:
+#		change_pivot_point("left")
+#	else:
+#		change_pivot_point("right")
 	
 	if Input.is_action_just_pressed("p1use"):
 		get_tree().reload_current_scene()
 	
 	if Input.is_action_just_released("p1right") or Input.is_action_just_released("p1left"):
-		#velocity += -transform.y.normalized() * 500
+		linear_velocity += -transform.y.normalized() * 500
 		pass
 	
-	move_and_slide()
+	#apply the bobble effect
+	if rotation_degrees == 0:
+		constant_torque = 0
+	else:
+		constant_torque = -pow(abs(rotation_degrees),1) * (abs(rotation_degrees)/rotation_degrees) * torque
 
 
 func change_pivot_point(left_or_right):
@@ -58,3 +60,11 @@ func change_pivot_point(left_or_right):
 		collision.position.x = -width/2
 		camera.position.x = -width/2
 	position -= transform.x.normalized() * (collision.position.x - before)
+
+
+func _on_body_entered(body):
+	print("in floor")
+
+
+func _on_body_exited(body):
+	print("air")
