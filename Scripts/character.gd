@@ -15,7 +15,7 @@ var max_rotation = 55
 
 @onready var width = collision.shape.size.x
 var ground_torque = 120000
-var air_torque = 30000
+var air_torque = 6000
 var on_floor = false
 var jump_force = 800
 var torqueless_zone = 5 #degrees (same as getaway shootout)
@@ -46,10 +46,11 @@ func _physics_process(delta):
 	if Input.is_action_just_pressed("p1use"):
 		get_tree().reload_current_scene()
 	
-	if Input.is_action_just_released("p1right") or Input.is_action_just_released("p1left"):
+	if (Input.is_action_just_released("p1right") or Input.is_action_just_released("p1left")) and on_floor:
 		linear_velocity += -transform.y.normalized() * jump_force
 		turning = false
 		physics_material_override.bounce = default_bounce
+		angular_velocity = 0
 		pass
 	
 	#apply the bobble effect
