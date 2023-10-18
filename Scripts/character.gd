@@ -14,11 +14,13 @@ var max_rotation = 55
 @onready var camera = get_node(camerapath)
 
 @onready var width = collision.shape.size.x
-var ground_torque = 3000
-var air_torque = 300
+var ground_torque = 120000
+var air_torque = 30000
 var on_floor = false
 var jump_force = 800
 var torqueless_zone = 5 #degrees (same as getaway shootout)
+var turning = false
+@onready var default_bounce = physics_material_override.bounce
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -27,11 +29,12 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _physics_process(delta):
+	lock_rotation = false
 	if Input.is_action_pressed("p1left") and not Input.is_action_pressed("p1right"):
-		angular_velocity = -sensitivity * delta
+		turn(-1, delta)
 	
 	if Input.is_action_pressed("p1right") and not Input.is_action_pressed("p1left"):
-		angular_velocity = sensitivity * delta
+		turn(1, delta)
 		
 	#rotation_degrees = clamp(rotation_degrees, -max_rotation, max_rotation)
 	
@@ -45,19 +48,36 @@ func _physics_process(delta):
 	
 	if Input.is_action_just_released("p1right") or Input.is_action_just_released("p1left"):
 		linear_velocity += -transform.y.normalized() * jump_force
-		angular_velocity = 0
+		turning = false
+		physics_material_override.bounce = default_bounce
 		pass
 	
 	#apply the bobble effect
 	if rotation_degrees == 0:
 		constant_torque = 0
 	else:
-		if on_floor: constant_torque = -pow(abs(rotation_degrees),1) * (abs(rotation_degrees)/rotation_degrees) * ground_torque
+		if on_floor: 
+			if not in_torqueless_zone(): apply_torque(-rotation_degrees * ground_torque * delta)
 		else: 
-			constant_torque = -pow(abs(rotation_degrees),1.2) * (abs(rotation_degrees)/rotation_degrees) * air_torque
-			if rotation_degrees == clamp(rotation_degrees,-torqueless_zone,torqueless_zone): #rotation degrees is within torqueless zone degrees
+			if not in_torqueless_zone(): apply_torque(-rotation_degrees * air_torque * delta)
+			if rotation_degrees == clamp(rotation_degrees,-torqueless_zone,torqueless_zone) and 0: #rotation degrees is within torqueless zone degrees
 				constant_torque = 0
-				angular_velocity = 0
+				if not turning: angular_velocity = 0
+
+
+func turn(direction, delta):
+	if on_floor or turning:
+		physics_material_override.bounce = 0
+		lock_rotation = true
+		if rotation_degrees == clamp(rotation_degrees, -max_rotation, max_rotation) or rotation_degrees/abs(rotation_degrees) != direction:
+			angular_velocity = sensitivity * delta * direction
+		turning = true
+
+
+func in_torqueless_zone():
+	if rotation_degrees == clamp(rotation_degrees,-torqueless_zone,torqueless_zone):
+		return true
+	return false
 
 
 func change_pivot_point(left_or_right):
