@@ -11,11 +11,12 @@ bounce = 0.05
 size = Vector2(47.295, 166.39)
 
 [node name="RigidBody2D" type="RigidBody2D"]
+center_of_mass_mode = 1
 physics_material_override = SubResource("PhysicsMaterial_mpnnt")
+gravity_scale = 1.1
 max_contacts_reported = 1
 contact_monitor = true
 can_sleep = false
-constant_torque = 3.26
 script = ExtResource("1_3ra8w")
 collisionpath = NodePath("CollisionShape2D")
 spritepath = NodePath("CollisionShape2D/Sprite2D")
@@ -23,7 +24,7 @@ camerapath = NodePath("Camera2D")
 metadata/_edit_group_ = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0, -80.195)
+position = Vector2(0, -83.195)
 shape = SubResource("RectangleShape2D_6ibit")
 
 [node name="Sprite2D" type="Sprite2D" parent="CollisionShape2D"]

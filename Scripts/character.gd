@@ -1,6 +1,6 @@
 extends RigidBody2D
 
-var sensitivity = 3
+var sensitivity = 1.5
 var gravity = 1000
 var max_rotation = 55
 
@@ -15,7 +15,7 @@ var max_rotation = 55
 
 @onready var width = collision.shape.size.x
 var ground_torque = 120000
-var air_torque = 6000
+var air_torque = 100
 var on_floor = false
 var jump_force = 800
 var torqueless_zone = 5 #degrees (same as getaway shootout)
@@ -31,6 +31,7 @@ func _ready():
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _physics_process(delta):
 	lock_rotation = false
+	center_of_mass_mode = CENTER_OF_MASS_MODE_AUTO
 	if Input.is_action_pressed("p1left") and not Input.is_action_pressed("p1right"):
 		turn(-1, delta)
 	
@@ -53,6 +54,7 @@ func _physics_process(delta):
 		turning = false
 		physics_material_override.bounce = default_bounce
 		angular_velocity = 0
+		angular_damp
 		pass
 	
 	apply_bobble_effect(delta)
@@ -75,11 +77,12 @@ func apply_bobble_effect(delta):
 	if abs(rotation_degrees) > 10:
 		apply_torque(-direction * ground_torque * delta * 60)
 	elif not in_torqueless_zone():
-		if angular_velocity * -direction > 3:
+		if angular_velocity * -direction > 3 and 0:
 			apply_torque(direction * ground_torque * delta * 440)
 
 
 func turn(direction, delta):
+	center_of_mass_mode = CENTER_OF_MASS_MODE_CUSTOM
 	if on_floor or turning:
 		physics_material_override.bounce = 0
 		lock_rotation = true
