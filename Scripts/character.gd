@@ -1,6 +1,6 @@
 extends RigidBody2D
 
-var sensitivity = 180
+var sensitivity = 3
 var gravity = 1000
 var max_rotation = 55
 
@@ -21,6 +21,7 @@ var jump_force = 800
 var torqueless_zone = 5 #degrees (same as getaway shootout)
 var turning = false
 @onready var default_bounce = physics_material_override.bounce
+var direction
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -35,6 +36,7 @@ func _physics_process(delta):
 	
 	if Input.is_action_pressed("p1right") and not Input.is_action_pressed("p1left"):
 		turn(1, delta)
+	direction = rotation_degrees/abs(rotation_degrees)
 		
 	#rotation_degrees = clamp(rotation_degrees, -max_rotation, max_rotation)
 	
@@ -53,17 +55,28 @@ func _physics_process(delta):
 		angular_velocity = 0
 		pass
 	
-	#apply the bobble effect
+	apply_bobble_effect(delta)
+
+
+func apply_bobble_effect(delta):
 	if rotation_degrees == 0:
 		constant_torque = 0
-	else:
-		if on_floor: 
-			if not in_torqueless_zone(): apply_torque(-rotation_degrees * ground_torque * delta)
-		else: 
-			if not in_torqueless_zone(): apply_torque(-rotation_degrees * air_torque * delta)
-			if rotation_degrees == clamp(rotation_degrees,-torqueless_zone,torqueless_zone) and 0: #rotation degrees is within torqueless zone degrees
-				constant_torque = 0
-				if not turning: angular_velocity = 0
+		return
+	
+	if not on_floor: 
+		if not in_torqueless_zone(): apply_torque(-rotation_degrees * air_torque * delta)
+		
+		if rotation_degrees == clamp(rotation_degrees,-torqueless_zone,torqueless_zone) and 0: #rotation degrees is within torqueless zone degrees
+			constant_torque = 0
+			if not turning: angular_velocity = 0
+		return
+	
+	#on floor
+	if abs(rotation_degrees) > 10:
+		apply_torque(-direction * ground_torque * delta * 60)
+	elif not in_torqueless_zone():
+		if angular_velocity * -direction > 3:
+			apply_torque(direction * ground_torque * delta * 440)
 
 
 func turn(direction, delta):
@@ -71,7 +84,7 @@ func turn(direction, delta):
 		physics_material_override.bounce = 0
 		lock_rotation = true
 		if rotation_degrees == clamp(rotation_degrees, -max_rotation, max_rotation) or rotation_degrees/abs(rotation_degrees) != direction:
-			angular_velocity = sensitivity * delta * direction
+			angular_velocity = sensitivity * direction
 		turning = true
 
 

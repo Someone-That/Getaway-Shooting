@@ -15,6 +15,7 @@ physics_material_override = SubResource("PhysicsMaterial_mpnnt")
 max_contacts_reported = 1
 contact_monitor = true
 can_sleep = false
+constant_torque = 3.26
 script = ExtResource("1_3ra8w")
 collisionpath = NodePath("CollisionShape2D")
 spritepath = NodePath("CollisionShape2D/Sprite2D")
