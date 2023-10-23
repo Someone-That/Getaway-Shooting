@@ -15,7 +15,7 @@ var max_rotation = 55
 
 @onready var width = collision.shape.size.x
 var ground_torque = 120000
-var air_torque = 100
+var air_torque = 0
 var on_floor = false
 var jump_force = 800
 var torqueless_zone = 5 #degrees (same as getaway shootout)
