@@ -65,6 +65,15 @@ func apply_bobble_effect(delta):
 		constant_torque = 0
 		return
 	
+	if Input.is_action_just_pressed("debug j"):
+		apply_torque(-ground_torque * delta * 60) #20.4
+	if Input.is_action_just_pressed("debug k"):
+		apply_torque(-ground_torque * delta * 60)
+	if Input.is_action_just_pressed("debug l"):
+		apply_torque(ground_torque * delta * 60)
+	if Input.is_action_just_pressed("debug ;"):
+		apply_torque(ground_torque * delta * 60)
+	
 	if not on_floor: 
 		if not in_torqueless_zone(): apply_torque(-rotation_degrees * air_torque * delta)
 		
@@ -74,11 +83,12 @@ func apply_bobble_effect(delta):
 		return
 	
 	#on floor
-	if abs(rotation_degrees) > 10:
-		apply_torque(-direction * ground_torque * delta * 60)
-	elif not in_torqueless_zone():
-		if angular_velocity * -direction > 3 and 0:
-			apply_torque(direction * ground_torque * delta * 440)
+	if abs(rotation_degrees) > 10 and not turning:
+		#apply_torque(-direction * ground_torque * delta * 60)
+		angular_velocity = -direction * 3
+#	elif not in_torqueless_zone():
+#		if angular_velocity * -direction > 3 and 0:
+#			apply_torque(direction * ground_torque * delta * 440)
 
 
 func turn(direction, delta):
