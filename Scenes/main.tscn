@@ -1,12 +1,14 @@
-[gd_scene load_steps=4 format=3 uid="uid://lm2lsp84shua"]
+[gd_scene load_steps=5 format=3 uid="uid://lm2lsp84shua"]
 
 [ext_resource type="Texture2D" uid="uid://bw8kdjg0rj4sq" path="res://icon.svg" id="1_1ypgl"]
+[ext_resource type="Script" path="res://Scripts/globals.gd" id="1_6fyr2"]
 [ext_resource type="PackedScene" uid="uid://kar43gtfxsa6" path="res://Scenes/character.tscn" id="2_hydm3"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_f066a"]
 size = Vector2(2143, 283)
 
 [node name="main" type="Node2D"]
+script = ExtResource("1_6fyr2")
 
 [node name="StaticBody2D" type="StaticBody2D" parent="."]
 position = Vector2(594, 530)
@@ -20,4 +22,5 @@ scale = Vector2(16.7813, 1.47656)
 texture = ExtResource("1_1ypgl")
 
 [node name="character" parent="." instance=ExtResource("2_hydm3")]
-position = Vector2(568, 186)
+position = Vector2(539, 361)
+rotation = 1.5708

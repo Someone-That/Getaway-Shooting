@@ -25,39 +25,57 @@ var direction
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	randomize()
+	globals.data.append("reloaded")
+	await get_tree().create_timer(2.0).timeout
+	get_tree().reload_current_scene()
 	pass # Replace with function body.
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
+#func _physics_process(delta):
+#	lock_rotation = false
+#	center_of_mass_mode = CENTER_OF_MASS_MODE_AUTO
+#	if Input.is_action_pressed("p1left") and not Input.is_action_pressed("p1right"):
+#		turn(-1, delta)
+#
+#	if Input.is_action_pressed("p1right") and not Input.is_action_pressed("p1left"):
+#		turn(1, delta)
+#	direction = rotation_degrees/abs(rotation_degrees)
+#
+#	#rotation_degrees = clamp(rotation_degrees, -max_rotation, max_rotation)
+#
+##	if rotation_degrees < 0:
+##		change_pivot_point("left")
+##	else:
+##		change_pivot_point("right")
+#
+#	if Input.is_action_just_pressed("p1use"):
+#		get_tree().reload_current_scene()
+#
+#	if (Input.is_action_just_released("p1right") or Input.is_action_just_released("p1left")) and on_floor:
+#		linear_velocity += -transform.y.normalized() * jump_force
+#		turning = false
+#		physics_material_override.bounce = default_bounce
+#		angular_velocity = 0
+#		angular_damp
+#		pass
+#
+#	apply_bobble_effect(delta)
+
+
 func _physics_process(delta):
-	lock_rotation = false
-	center_of_mass_mode = CENTER_OF_MASS_MODE_AUTO
-	if Input.is_action_pressed("p1left") and not Input.is_action_pressed("p1right"):
-		turn(-1, delta)
-	
-	if Input.is_action_pressed("p1right") and not Input.is_action_pressed("p1left"):
-		turn(1, delta)
-	direction = rotation_degrees/abs(rotation_degrees)
-		
-	#rotation_degrees = clamp(rotation_degrees, -max_rotation, max_rotation)
-	
-#	if rotation_degrees < 0:
-#		change_pivot_point("left")
-#	else:
-#		change_pivot_point("right")
-	
+	#direction = rotation_degrees/abs(rotation_degrees)
+
 	if Input.is_action_just_pressed("p1use"):
 		get_tree().reload_current_scene()
 	
-	if (Input.is_action_just_released("p1right") or Input.is_action_just_released("p1left")) and on_floor:
-		linear_velocity += -transform.y.normalized() * jump_force
-		turning = false
-		physics_material_override.bounce = default_bounce
-		angular_velocity = 0
-		angular_damp
-		pass
-	
-	apply_bobble_effect(delta)
+	if rotation_degrees < 0:
+		return
+	var random_value = randi_range(-10,120)
+	globals.data.append(random_value)
+
+	apply_torque(-ground_torque * delta * random_value)
 
 
 func apply_bobble_effect(delta):

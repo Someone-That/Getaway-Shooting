@@ -11,7 +11,6 @@ bounce = 0.05
 size = Vector2(47.295, 166.39)
 
 [node name="RigidBody2D" type="RigidBody2D"]
-center_of_mass_mode = 1
 physics_material_override = SubResource("PhysicsMaterial_mpnnt")
 gravity_scale = 1.1
 max_contacts_reported = 1
@@ -37,6 +36,7 @@ zoom = Vector2(0.7, 0.7)
 position_smoothing_speed = 10.0
 
 [node name="Control" type="Control" parent="."]
+visible = false
 layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
